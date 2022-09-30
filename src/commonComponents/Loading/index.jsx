@@ -10,7 +10,7 @@ const styles = {
 const Loading = ({ position = "static" }) => {
   return (
     <Box sx={styles[position]}>
-      <CircularProgress sx={{ color: "black" }} />
+      <CircularProgress sx={{ color: "#00BDD3" }} />
     </Box>
   );
 };

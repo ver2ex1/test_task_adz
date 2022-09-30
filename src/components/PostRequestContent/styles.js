@@ -7,12 +7,13 @@ const getStyles = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      minHeight: "714px",
       "& h1": {
         marginBottom: "50px",
         textAlign: "center",
         [theme.breakpoints.down(380)]: {
-            width: "328px",
-          },
+          width: "328px",
+        },
       },
     },
     content: {
@@ -39,6 +40,12 @@ const getStyles = () => {
       },
       "& div": {
         width: "380px",
+        "& .Mui-focused": {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#D0CFCF !important",
+            borderWidth: "1px !important",
+          },
+        },
         [theme.breakpoints.down(380)]: {
           width: "328px",
         },
@@ -87,6 +94,7 @@ const getStyles = () => {
     },
     button: {
       textAlign: "center",
+      
     },
   };
 };

@@ -15,6 +15,7 @@ import { observer } from "mobx-react-lite";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import SuccesfulyRegistered from "../../assets/SuccesfulyRegistered";
 
 import getStyles from "./styles";
 
@@ -40,8 +41,15 @@ const PostRequestContent = forwardRef((props, ref) => {
   const [photo, setPhoto] = useState("");
   const [photoName, setPhotoName] = useState("");
   const classes = getStyles();
-  const { positions, getPositions, isPositionsLoading, createUser, getUsers } =
-    usersStore;
+  const {
+    positions,
+    getPositions,
+    isPositionsLoading,
+    createUser,
+    getUsers,
+    isUserCreated,
+    isUserCreateLoading,
+  } = usersStore;
   const {
     register,
     handleSubmit,
@@ -81,91 +89,121 @@ const PostRequestContent = forwardRef((props, ref) => {
 
   return (
     <Box sx={classes.wrapper} ref={ref}>
-      <Typography variant="h1">Working with POST request</Typography>
-      <Box sx={classes.content}>
-        {isPositionsLoading ? (
-          <Loading />
-        ) : (
-          <Box sx={classes.formWrapper}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box sx={classes.inputsWrapper}>
-                <TextField
-                  placeholder="Your name"
-                  {...register("name")}
-                  helperText={
-                    errors.name?.message ? errors.name?.message : <span></span>
-                  }
-                  error={Boolean(errors.name?.message)}
-                />
-                <TextField
-                  placeholder="Email"
-                  {...register("email")}
-                  helperText={
-                    errors.email?.message ? (
-                      errors.email?.message
-                    ) : (
-                      <span></span>
-                    )
-                  }
-                  error={Boolean(errors.email?.message)}
-                />
-                <TextField
-                  placeholder="Phone"
-                  helperText={
-                    errors.phone?.message || "+38 (XXX) XXX - XX - XX"
-                  }
-                  {...register("phone")}
-                  error={Boolean(errors.phone?.message)}
-                />
-              </Box>
-              <Box>
-                <Typography variant="body1">Select your position</Typography>
-                <Box sx={classes.radioWrapper}>
-                  <RadioGroup>
-                    {positions.map((item) => (
-                      <FormControlLabel
-                        key={item.id}
-                        control={<Radio sx={classes.radio} />}
-                        label={item.name}
-                        value={item.id}
-                        {...register("position_id")}
+      {isUserCreateLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Typography variant="h1">
+            {isUserCreated
+              ? "User successfully registered"
+              : "Working with POST request"}
+          </Typography>
+          <Box sx={classes.content}>
+            {isPositionsLoading ? (
+              <Loading />
+            ) : (
+              <Box sx={classes.formWrapper}>
+                {isUserCreated ? (
+                  <SuccesfulyRegistered />
+                ) : (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={classes.inputsWrapper}>
+                      <TextField
+                        label="Your name"
+                        {...register("name")}
+                        helperText={
+                          errors.name?.message ? (
+                            errors.name?.message
+                          ) : (
+                            <span></span>
+                          )
+                        }
+                        error={Boolean(errors.name?.message)}
+                        InputLabelProps={{
+                          style: { color: "#7E7E7E" },
+                        }}
                       />
-                    ))}
-                  </RadioGroup>
-                  <span style={classes.uploadAreaError}>
-                    {errors.position_id?.message && errors.position_id?.message}
-                  </span>
-                </Box>
-                <label>
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    accept="image/jpg, image/jpeg"
-                    onChange={handlePhotoChange}
-                  />
-                  <Box sx={classes.uploadAreaWrapper}>
-                    <Box sx={classes.uploadArea}>
-                      <Box sx={classes.uploadButton}>Upload</Box>
-                      <Box sx={classes.imageName}>
-                        <span>{photoName || "Upload your photo"}</span>
+                      <TextField
+                        label="Email"
+                        {...register("email")}
+                        helperText={
+                          errors.email?.message ? (
+                            errors.email?.message
+                          ) : (
+                            <span></span>
+                          )
+                        }
+                        error={Boolean(errors.email?.message)}
+                        InputLabelProps={{
+                          style: { color: "#7E7E7E" },
+                        }}
+                      />
+                      <TextField
+                        label="Phone"
+                        helperText={
+                          errors.phone?.message || "+38 (XXX) XXX - XX - XX"
+                        }
+                        {...register("phone")}
+                        error={Boolean(errors.phone?.message)}
+                        InputLabelProps={{
+                          style: { color: "#7E7E7E" },
+                        }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="body1">
+                        Select your position
+                      </Typography>
+                      <Box sx={classes.radioWrapper}>
+                        <RadioGroup>
+                          {positions.map((item) => (
+                            <FormControlLabel
+                              key={item.id}
+                              control={<Radio sx={classes.radio} />}
+                              label={item.name}
+                              value={item.id}
+                              {...register("position_id")}
+                            />
+                          ))}
+                        </RadioGroup>
+                        <span style={classes.uploadAreaError}>
+                          {errors.position_id?.message &&
+                            errors.position_id?.message}
+                        </span>
+                      </Box>
+                      <label>
+                        <input
+                          type="file"
+                          style={{ display: "none" }}
+                          accept="image/jpg, image/jpeg"
+                          onChange={handlePhotoChange}
+                        />
+                        <Box sx={classes.uploadAreaWrapper}>
+                          <Box sx={classes.uploadArea}>
+                            <Box sx={classes.uploadButton}>Upload</Box>
+                            <Box sx={classes.imageName}>
+                              <span>{photoName || "Upload your photo"}</span>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </label>
+                      <Box sx={classes.button}>
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          disabled={!isDirty || !photo}
+                        >
+                          Sign up
+                        </Button>
                       </Box>
                     </Box>
-                  </Box>
-                </label>
-                <Box sx={classes.button}>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    disabled={!isDirty || !photo}
-                  >
-                    Sign up
-                  </Button>
-                </Box>
+                  </form>
+                )}
               </Box>
-            </form>
+            )}
           </Box>
-        )}
-      </Box>
+        </>
+      )}
     </Box>
   );
 });

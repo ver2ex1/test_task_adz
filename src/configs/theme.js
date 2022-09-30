@@ -32,6 +32,7 @@ const theme = createTheme({
           boxShadow: "none",
           "&:hover": {
             boxShadow: "none",
+            background: "#F4E041",
           },
         },
       },

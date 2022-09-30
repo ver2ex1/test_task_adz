@@ -9,6 +9,8 @@ class UsersStore {
   positions = [];
   isLoadingUsers = false;
   isLoadingPositions = false;
+  isUserCreateLoading = false;
+  isUserCreated = false;
 
   constructor() {
     makeObservable(this, {
@@ -17,6 +19,8 @@ class UsersStore {
       pages: observable.ref,
       positions: observable.ref,
       isLoadingPositions: observable.ref,
+      isUserCreated: observable.ref,
+      isUserCreateLoading: observable.ref,
 
       getUsers: action,
       createUser: action,
@@ -50,7 +54,7 @@ class UsersStore {
 
   createUser = ({ payload, callback }) => {
     runInAction(() => {
-      this.isLoadingUsers = true;
+      this.isUserCreateLoading = true;
     });
     let formData = new FormData();
     formData.append("name", payload.name);
@@ -64,15 +68,16 @@ class UsersStore {
       })
       .then(({ data: { message } }) => {
         runInAction(() => {
-          this.isLoadingUsers = false;
+          this.isUserCreateLoading = false;
           toast.success(message);
+          this.isUserCreated = true;
         });
         callback && callback();
       })
       .catch(() => {
         toast.error("Failed create user");
         runInAction(() => {
-          this.isLoadingUsers = false;
+          this.isUserCreateLoading = false;
         });
       });
   };
